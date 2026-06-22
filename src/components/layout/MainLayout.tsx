@@ -17,8 +17,8 @@ export const MainLayout = ({
   action,
   children,
 }: MainLayoutProps) => (
-  <div className="min-h-screen bg-slate-50 pb-20">
-    <Header title={title} subtitle={subtitle} showBack={showBack} action={action} />
+  <div className="min-h-screen pb-20" style={{ backgroundColor: 'var(--color-bg)' }}>
+    <Header title={title} subtitle={subtitle} showBack={showBack} showLogo action={action} />
     <main className="mx-auto max-w-md px-4 py-4">{children}</main>
     <BottomNav />
   </div>
