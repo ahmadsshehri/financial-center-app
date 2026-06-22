@@ -8,10 +8,15 @@ export default {
       },
       colors: {
         brand: {
-          DEFAULT: '#0F172A',
-          50: '#F8FAFC',
-          100: '#F1F5F9',
-          900: '#0F172A',
+          DEFAULT: '#1D4ED8',
+          50:  '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          500: '#3B82F6',
+          600: '#2563EB',
+          700: '#1D4ED8',
+          800: '#1E40AF',
+          900: '#1E3A8A',
         },
       },
       borderRadius: {
@@ -24,3 +29,4 @@ export default {
   },
   plugins: [],
 };
+

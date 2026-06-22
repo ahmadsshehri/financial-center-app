@@ -12,7 +12,7 @@ const items = [
 ];
 
 export const BottomNav = () => (
-  <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white">
+  <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-blue-100 bg-white">
     <div className="mx-auto flex max-w-md items-stretch justify-between px-2">
       {items.map(({ to, label, icon: Icon }) => (
         <NavLink
@@ -21,7 +21,7 @@ export const BottomNav = () => (
           className={({ isActive }) =>
             clsx(
               'flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition',
-              isActive ? 'text-slate-900' : 'text-slate-400'
+              isActive ? 'text-blue-700' : 'text-slate-400'
             )
           }
         >
