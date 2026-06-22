@@ -316,3 +316,37 @@ export const completeOnboarding = async (
 
   await batch.commit();
 };
+
+// ---------- regenerate 40-day tasks ----------
+export const regenerateTasks = async (
+  uid: string,
+  tasks: {
+    title: string;
+    centerKey: string;
+    centerId: string;
+    requiredAmount: number;
+    date: string;
+    frequency: string;
+    type: string;
+    weight: number;
+  }[]
+): Promise<void> => {
+  // delete all existing pending tasks first
+  const existing = await getDocs(
+    query(sub(uid, 'tasks'), where('status', '==', 'pending'))
+  );
+  const batch = writeBatch(db);
+  existing.docs.forEach((d) => batch.delete(d.ref));
+  for (const t of tasks) {
+    const ref = doc(sub(uid, 'tasks'));
+    batch.set(ref, {
+      ...t,
+      completedAmount: 0,
+      status: 'pending',
+      postponedCount: 0,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+  await batch.commit();
+};
