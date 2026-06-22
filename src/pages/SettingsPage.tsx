@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Lock, User as UserIcon } from 'lucide-react';
+import { LogOut, Lock, User as UserIcon, RefreshCw } from 'lucide-react';
 import { MainLayout } from '../components/layout/MainLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { Badge } from '../components/ui/Badge';
+import { useAuth } from '../hooks/useAuth';
 import { useUserData } from '../hooks/useUserData';
 import { useFinancialCenters } from '../hooks/useFinancialCenters';
 import { logoutUser } from '../firebase/auth';
+import { getIncomeSources, regenerateTasks } from '../firebase/firestore';
 import { ROUTES } from '../constants/routes';
 import { validateAllocation } from '../utils/validators';
+import { centerMonthlyAmount, dailyAmount, totalIncome } from '../utils/calculations';
+import { generate40DayDates } from '../utils/dates';
 
 export const SettingsPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { profile, update } = useUserData();
   const { centers, update: updateCenter } = useFinancialCenters();
   const [payday, setPayday] = useState('1');
   const [mode, setMode] = useState<'daily' | 'weekly'>('daily');
   const [pcts, setPcts] = useState<Record<string, number>>({});
   const [savedMsg, setSavedMsg] = useState('');
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -60,6 +66,55 @@ export const SettingsPage = () => {
   const logout = async () => {
     await logoutUser();
     navigate(ROUTES.WELCOME);
+  };
+
+  const handleRegenerateTasks = async () => {
+    if (!user) return;
+    setRegenerating(true);
+    try {
+      const sources = await getIncomeSources(user.uid);
+      const income = totalIncome(sources);
+      const dates = generate40DayDates(new Date());
+
+      const centerTitles: Record<string, string> = {
+        expenses: 'تحويل المصروف الشخصي',
+        balance: 'تحويل التوازن اليومي',
+        charity: 'تحويل الصدقة اليومية',
+        readiness: 'تحويل الاستعداد اليومي',
+        debts: 'تحويل الديون اليومي',
+      };
+
+      const taskCenters = centers.filter((c) =>
+        ['expenses', 'balance', 'charity', 'readiness', 'debts'].includes(c.key)
+      );
+
+      const tasks = dates.flatMap((date) =>
+        taskCenters
+          .filter((c) => {
+            const monthly = centerMonthlyAmount(income, c.percentage);
+            return Math.round(dailyAmount(monthly, 30)) > 0;
+          })
+          .map((c) => {
+            const monthly = centerMonthlyAmount(income, c.percentage);
+            return {
+              title: centerTitles[c.key] ?? `تحويل ${c.nameAr} اليومي`,
+              centerKey: c.key,
+              centerId: c.id,
+              requiredAmount: Math.round(dailyAmount(monthly, 30)),
+              date,
+              frequency: 'daily',
+              type: 'financial',
+              weight: 1,
+            };
+          })
+      );
+
+      await regenerateTasks(user.uid, tasks);
+      setSavedMsg('تم إعادة توليد خطة 40 يوم بنجاح');
+      setTimeout(() => setSavedMsg(''), 3000);
+    } finally {
+      setRegenerating(false);
+    }
   };
 
   return (
@@ -154,6 +209,23 @@ export const SettingsPage = () => {
             بياناتك المالية مخزّنة في حسابك الخاص فقط ومحمية بقواعد وصول صارمة. لا يطّلع
             عليها أحد سواك.
           </p>
+        </Card>
+
+        <Card className="space-y-2">
+          <h3 className="text-sm font-semibold text-slate-700">خطة التأسيس</h3>
+          <p className="text-xs text-slate-500 leading-6">
+            إعادة توليد مهام خطة الـ 40 يوم من اليوم الحالي. سيتم حذف المهام المعلقة
+            واستبدالها بمهام جديدة تشمل تحويل المصروف الشخصي.
+          </p>
+          <Button
+            variant="secondary"
+            fullWidth
+            onClick={handleRegenerateTasks}
+            disabled={regenerating}
+          >
+            <RefreshCw size={15} />
+            {regenerating ? 'جارٍ إعادة التوليد...' : 'إعادة توليد خطة 40 يوم'}
+          </Button>
         </Card>
 
         <Button variant="danger" fullWidth onClick={logout}>
