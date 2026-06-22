@@ -108,14 +108,22 @@ export const OnboardingPage = () => {
       });
 
       // generate daily financial tasks for active money-moving centers
+      // expenses is included so the user sees the personal spending transfer each day
       const taskCenters = payloadCenters.filter((c) =>
-        ['balance', 'charity', 'readiness', 'debts'].includes(c.key)
+        ['expenses', 'balance', 'charity', 'readiness', 'debts'].includes(c.key)
       );
+      const centerTitles: Record<string, string> = {
+        expenses: 'تحويل المصروف الشخصي',
+        balance: 'تحويل التوازن اليومي',
+        charity: 'تحويل الصدقة اليومية',
+        readiness: 'تحويل الاستعداد اليومي',
+        debts: 'تحويل الديون اليومي',
+      };
       const tasks = dates.flatMap((date) =>
         taskCenters
           .filter((c) => c.dailyAmount > 0)
           .map((c) => ({
-            title: `تحويل ${c.nameAr} اليومي`,
+            title: centerTitles[c.key] ?? `تحويل ${c.nameAr} اليومي`,
             centerKey: c.key,
             requiredAmount: Math.round(c.dailyAmount),
             date,
