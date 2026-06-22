@@ -2,30 +2,18 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-const requiredVars = [
-  'VITE_FIREBASE_API_KEY',
-  'VITE_FIREBASE_AUTH_DOMAIN',
-  'VITE_FIREBASE_PROJECT_ID',
-  'VITE_FIREBASE_STORAGE_BUCKET',
-  'VITE_FIREBASE_MESSAGING_SENDER_ID',
-  'VITE_FIREBASE_APP_ID',
-] as const;
+const apiKey = import.meta.env.VITE_FIREBASE_API_KEY as string | undefined;
 
-const missing = requiredVars.filter((key) => !import.meta.env[key]);
-if (missing.length > 0) {
-  throw new Error(
-    `متغيرات Firebase مفقودة: ${missing.join(', ')}\n` +
-    'أضف هذه المتغيرات في إعدادات مشروعك على Vercel أو في ملف .env المحلي.'
-  );
-}
+export const isMissingConfig = !apiKey;
 
+// Fallback so the module loads even without env vars — React will show the error UI
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: apiKey ?? 'missing',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? 'missing',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? 'missing',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? 'missing',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ?? 'missing',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID ?? 'missing',
 };
 
 const app = initializeApp(firebaseConfig);
