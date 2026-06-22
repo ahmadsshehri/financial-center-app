@@ -18,7 +18,7 @@ import { ROUTES } from '../constants/routes';
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { profile } = useUserData();
+  const { profile, loading: profileLoading } = useUserData();
   const { centers } = useFinancialCenters();
   const { tasks, todayTasks } = useTasks();
   const [income, setIncome] = useState(0);
@@ -45,6 +45,11 @@ export const DashboardPage = () => {
     return 'وضعك جيد، فكّر بتوجيه الفائض نحو الاستعداد للفرص.';
   }, [profile]);
 
+  if (profileLoading) return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900" />
+    </div>
+  );
   if (!onboarded) return null;
 
   return (
