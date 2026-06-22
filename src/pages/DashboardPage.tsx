@@ -30,8 +30,9 @@ export const DashboardPage = () => {
 
   const onboarded = profile?.onboardingCompleted;
   useEffect(() => {
-    if (profile && !profile.onboardingCompleted) navigate(ROUTES.ONBOARDING);
-  }, [profile, navigate]);
+    if (profileLoading) return;
+    if (!profile || !profile.onboardingCompleted) navigate(ROUTES.ONBOARDING);
+  }, [profile, profileLoading, navigate]);
 
   const level = getHealthLevel(profile?.healthScore ?? 0);
   const planProgress = useMemo(() => foundationProgress(tasks), [tasks]);
@@ -50,7 +51,10 @@ export const DashboardPage = () => {
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900" />
     </div>
   );
-  if (!onboarded) return null;
+  // No profile doc or onboarding not done → redirect to onboarding
+  if (!profile || !profile.onboardingCompleted) {
+    return null;
+  }
 
   return (
     <MainLayout title="المركز المالي" subtitle={profile?.displayName}>
