@@ -24,8 +24,16 @@ export const LoginPage = () => {
     try {
       await loginUser(email, password);
       navigate(ROUTES.DASHBOARD);
-    } catch {
-      setError('تعذّر تسجيل الدخول. تحقق من البريد وكلمة المرور.');
+    } catch (err) {
+      console.error('Login error:', err);
+      const msg = (err as { code?: string }).code;
+      if (msg === 'auth/user-not-found' || msg === 'auth/wrong-password' || msg === 'auth/invalid-credential') {
+        setError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+      } else if (msg === 'auth/too-many-requests') {
+        setError('تم تجاوز عدد المحاولات. حاول لاحقاً.');
+      } else {
+        setError(`تعذّر تسجيل الدخول (${msg ?? 'unknown'})`);
+      }
     } finally {
       setLoading(false);
     }

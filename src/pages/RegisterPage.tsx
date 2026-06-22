@@ -41,12 +41,19 @@ export const RegisterPage = () => {
       });
       navigate(ROUTES.ONBOARDING);
     } catch (err) {
+      console.error('Registration error:', err);
       const msg = (err as { code?: string }).code;
-      setError(
-        msg === 'auth/email-already-in-use'
-          ? 'هذا البريد مستخدم بالفعل'
-          : 'تعذّر إنشاء الحساب. حاول مرة أخرى.'
-      );
+      if (msg === 'auth/email-already-in-use') {
+        setError('هذا البريد مستخدم بالفعل');
+      } else if (msg === 'auth/operation-not-allowed') {
+        setError('تسجيل الدخول بالبريد غير مفعّل. يرجى تفعيل Email/Password في Firebase Console → Authentication → Sign-in method');
+      } else if (msg === 'auth/weak-password') {
+        setError('كلمة المرور ضعيفة جداً');
+      } else if (msg === 'auth/network-request-failed') {
+        setError('خطأ في الاتصال بالشبكة، تحقق من اتصالك بالإنترنت');
+      } else {
+        setError(`تعذّر إنشاء الحساب (${msg ?? 'unknown'}). حاول مرة أخرى.`);
+      }
     } finally {
       setLoading(false);
     }
