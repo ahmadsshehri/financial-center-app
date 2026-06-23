@@ -20,11 +20,7 @@ const App = () => (
       <Routes>
         <Route
           path={ROUTES.WELCOME}
-          element={
-            <PublicRoute>
-              <WelcomePage />
-            </PublicRoute>
-          }
+          element={<WelcomePage />}
         />
         <Route
           path={ROUTES.LOGIN}

@@ -227,6 +227,9 @@ export const SettingsPage = () => {
             <RefreshCw size={15} />
             {regenerating ? 'جارٍ إعادة التوليد...' : 'إعادة توليد خطة 40 يوم'}
           </Button>
+          <p className="text-xs leading-6 text-amber-700 bg-amber-50 rounded-lg px-3 py-2 border border-amber-200">
+            ⚠️ تنبيه: سيتم حذف جميع المهام الحالية (المنجزة والمعلقة) واستبدالها بخطة جديدة من اليوم.
+          </p>
         </Card>
 
         <Button variant="danger" fullWidth onClick={logout}>

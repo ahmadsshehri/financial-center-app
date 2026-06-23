@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './useAuth';
-import { getTasks, updateTask } from '../firebase/firestore';
+import { getTasks, completeTask } from '../firebase/firestore';
 import { Task, TaskStatus } from '../types/task';
 import { todayStr } from '../utils/dates';
 
@@ -24,12 +24,17 @@ export const useTasks = () => {
   const setStatus = useCallback(
     async (id: string, status: TaskStatus, completedAmount?: number) => {
       if (!user) return;
-      const updates: Partial<Task> = { status };
-      if (completedAmount !== undefined) updates.completedAmount = completedAmount;
-      await updateTask(user.uid, id, updates);
-      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
+      const task = tasks.find((t) => t.id === id);
+      if (!task) return;
+      const newAmount = completedAmount ?? task.completedAmount;
+      await completeTask(user.uid, task, status, newAmount);
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, status, completedAmount: newAmount } : t
+        )
+      );
     },
-    [user]
+    [user, tasks]
   );
 
   const todayTasks = useMemo(() => {
