@@ -262,9 +262,10 @@ export const OnboardingPage = () => {
                   <div className="flex items-center gap-1">
                     <input
                       type="number"
+                      step="0.1"
                       value={c.percentage}
                       onChange={(e) =>
-                        updateCenterPct(c.key, Number(e.target.value) || 0)
+                        updateCenterPct(c.key, parseFloat(e.target.value) || 0)
                       }
                       className="w-20 rounded-lg border border-slate-300 px-2 py-1.5 text-left text-sm"
                       dir="ltr"
