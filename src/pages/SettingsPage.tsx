@@ -175,9 +175,10 @@ export const SettingsPage = () => {
               <div className="flex items-center gap-1">
                 <input
                   type="number"
+                  step="0.1"
                   value={pcts[c.id] ?? c.percentage}
                   onChange={(e) =>
-                    setPcts({ ...pcts, [c.id]: Number(e.target.value) || 0 })
+                    setPcts({ ...pcts, [c.id]: parseFloat(e.target.value) || 0 })
                   }
                   className="w-20 rounded-lg border border-slate-300 px-2 py-1.5 text-left text-sm"
                   dir="ltr"
