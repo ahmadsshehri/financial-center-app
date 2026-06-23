@@ -147,7 +147,7 @@ export const OnboardingPage = () => {
 
   const canNext = () => {
     if (step === 1) return income > 0;
-    if (step === 2) return allocationValid;
+    if (step === 3) return allocationValid;
     return true;
   };
 
@@ -236,6 +236,21 @@ export const OnboardingPage = () => {
 
         {step === 2 && (
           <div className="space-y-4">
+            <h2 className="text-xl font-bold text-slate-900">شرح المراكز</h2>
+            {centers.map((c) => (
+              <Card key={c.key} className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-slate-800">{c.nameAr}</span>
+                  <span className="text-xs text-slate-400">{c.percentage}%</span>
+                </div>
+                <p className="text-xs leading-6 text-slate-600">{c.descriptionAr}</p>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-4">
             <h2 className="text-xl font-bold text-slate-900">توزيع المراكز</h2>
             <p className="text-sm text-slate-500">
               عدّل النسب بحيث يكون المجموع 100%.
@@ -287,21 +302,6 @@ export const OnboardingPage = () => {
                 </p>
               )}
             </Card>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900">شرح المراكز</h2>
-            {centers.map((c) => (
-              <Card key={c.key} className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-slate-800">{c.nameAr}</span>
-                  <span className="text-xs text-slate-400">{c.percentage}%</span>
-                </div>
-                <p className="text-xs leading-6 text-slate-600">{c.descriptionAr}</p>
-              </Card>
-            ))}
           </div>
         )}
 
