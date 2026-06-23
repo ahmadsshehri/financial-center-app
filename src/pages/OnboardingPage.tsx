@@ -61,10 +61,10 @@ function calcHealthScore(obligationRatio: number) {
 }
 
 function suggestedAllocation(ratio: number): Record<string, number> {
-  if (ratio <= 0.3) return { expenses: 40, balance: 20, charity: 5,   readiness: 10, debts: 10, surplus: 15 };
-  if (ratio <= 0.5) return { expenses: 45, balance: 15, charity: 2.5, readiness: 7.5, debts: 20, surplus: 10 };
-  if (ratio <= 0.7) return { expenses: 50, balance: 10, charity: 2,   readiness: 5,  debts: 28, surplus: 5  };
-  return                   { expenses: 55, balance: 5,  charity: 1,   readiness: 3,  debts: 33, surplus: 3  };
+  if (ratio <= 0.3) return { expenses: 42.5, balance: 22.5, charity: 5,   readiness: 10, debts: 20   };
+  if (ratio <= 0.5) return { expenses: 45,   balance: 17.5, charity: 2.5, readiness: 7.5, debts: 27.5 };
+  if (ratio <= 0.7) return { expenses: 50,   balance: 12.5, charity: 2,   readiness: 5,  debts: 30.5 };
+  return                   { expenses: 55,   balance: 7.5,  charity: 1,   readiness: 3,  debts: 33.5 };
 }
 
 const TOTAL_STEPS = 8;

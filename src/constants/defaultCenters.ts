@@ -6,7 +6,7 @@ export const DEFAULT_CENTERS = [
     nameAr: 'المصاريف',
     descriptionAr:
       'المال المخصص للحياة اليومية والشهرية. لا نقسمه إلى محافظ كثيرة، بل نستخدم قواعد إرشادية تساعدك تعرف من أين تصرف.',
-    percentage: 40,
+    percentage: 42.5,
     order: 1,
   },
   {
@@ -14,7 +14,7 @@ export const DEFAULT_CENTERS = [
     nameAr: 'التوازن',
     descriptionAr:
       'احتياطي داخلي لسد العجز عند الضرورة. الهدف أن يصل إلى ما يعادل دخل 3 أشهر. لا يُستخدم إلا عند الحاجة.',
-    percentage: 15,
+    percentage: 17.5,
     order: 2,
   },
   {
@@ -38,15 +38,7 @@ export const DEFAULT_CENTERS = [
     nameAr: 'الديون',
     descriptionAr:
       'مركز يساعدك على الانتقال من الديون الاستهلاكية إلى الديون الاستثمارية وتجهيز القدرة المالية للفرص منخفضة أو متوسطة المخاطر.',
-    percentage: 30,
+    percentage: 32.5,
     order: 5,
-  },
-  {
-    key: 'surplus' as FinancialCenterKey,
-    nameAr: 'الفائض',
-    descriptionAr:
-      'مال حر يقترح التطبيق استخدامه حسب حالتك المالية، مثل دعم التوازن، تقليل الديون، زيادة الاستعداد، أو مكافأة محسوبة.',
-    percentage: 7.5,
-    order: 6,
   },
 ];

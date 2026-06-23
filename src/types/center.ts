@@ -1,4 +1,4 @@
-export type FinancialCenterKey = "expenses" | "balance" | "charity" | "readiness" | "debts" | "surplus";
+export type FinancialCenterKey = "expenses" | "balance" | "charity" | "readiness" | "debts";
 
 export interface FinancialCenter {
   id: string;
