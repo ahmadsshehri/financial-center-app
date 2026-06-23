@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Lock } from 'lucide-react';
-import { Button } from '../components/ui/Button';
+import { Lock } from 'lucide-react';
 import { ROUTES } from '../constants/routes';
 
 export const WelcomePage = () => {
