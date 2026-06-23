@@ -29,27 +29,21 @@ export const WelcomePage = () => {
             </div>
             <h1 className="text-3xl font-bold text-white drop-shadow">المركز المالي</h1>
             <p className="mt-2 text-base text-blue-100">
-              مدربك الشخصي لبناء مركز مالي أقوى
+              مستشارك الشخصي لبناء مركز مالي أقوى
             </p>
           </div>
 
           {/* Info card */}
           <div className="space-y-4 rounded-2xl bg-white/10 backdrop-blur border border-white/20 p-5">
             <p className="text-sm leading-7 text-white/90">
-              لا يقسّم التطبيق مالك إلى محافظ كثيرة، بل إلى ستة مراكز مالية تساعدك على
-              معرفة من أين تصرف، وكيف توازن، وأين تستعد للفرص. الهدف بناء عادة مالية
-              متينة خلال 40 يومًا أولى.
+              تعبت من ضياع الراتب ،، وماتعرف كيف انصرف ؟
+              جربت برامج ادارة الميزانيه وفشلت؟
+              تفضل معنا ناخذك برحلة سهله وجاده توصلك الى اهدافك المالية بإذن الله
             </p>
             <div className="flex items-start gap-3 rounded-xl bg-white/10 p-3">
               <Lock size={17} className="mt-0.5 shrink-0 text-blue-200" />
               <p className="text-xs leading-6 text-white/80">
-                بياناتك المالية خاصة بك. لا يطلع عليها أحد، ولا يتم ربط أي حساب بنكي في النسخة الحالية.
-              </p>
-            </div>
-            <div className="flex items-start gap-3 rounded-xl bg-white/10 p-3">
-              <ShieldCheck size={17} className="mt-0.5 shrink-0 text-blue-200" />
-              <p className="text-xs leading-6 text-white/80">
-                مؤشر صحة مالية مبني على قواعد واضحة، يساعدك على فهم وضعك دون أحكام.
+                بياناتك المالية خاصة بك. لا يطلع عليها أحد.
               </p>
             </div>
           </div>
