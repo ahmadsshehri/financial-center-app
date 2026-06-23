@@ -153,6 +153,10 @@ export const updateCenter = async (
   });
 };
 
+export const deleteCenter = async (uid: string, id: string): Promise<void> => {
+  await deleteDoc(doc(db, 'users', uid, 'centers', id));
+};
+
 // ---------- tasks ----------
 export const getTasks = async (uid: string): Promise<Task[]> => {
   const snap = await getDocs(query(sub(uid, 'tasks'), orderBy('date')));
