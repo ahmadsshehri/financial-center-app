@@ -40,7 +40,7 @@ export const buildHealthScore = ({
   const hasDeficit = expenses ? expenses.currentBalance < 0 : false;
 
   const savingsCenters = centers.filter((c) =>
-    ['balance', 'readiness', 'surplus'].includes(c.key)
+    ['balance', 'readiness'].includes(c.key)
   );
   const savingsTotal = savingsCenters.reduce((s, c) => s + c.monthlyAmount, 0);
   const savingsRate = income > 0 ? Math.min(savingsTotal / income, 1) : 0;
@@ -91,7 +91,7 @@ export const buildHealthScore = ({
       ? 'ركّز على تغطية المصاريف الأساسية وتقليل السحوبات قبل أي توسع.'
       : score < 66
       ? 'أنت في طريق التحسن، حافظ على الالتزام وزد من مركز التوازن تدريجيًا.'
-      : 'وضعك جيد، فكّر في توجيه الفائض نحو الاستعداد والفرص.';
+      : 'وضعك جيد، فكّر في تعزيز مركز التوازن والاستعداد للفرص.';
 
   return {
     score,
