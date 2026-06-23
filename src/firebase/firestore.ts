@@ -196,6 +196,37 @@ export const updateTask = async (
   });
 };
 
+// Updates task status AND adjusts the center's currentBalance by the delta
+export const completeTask = async (
+  uid: string,
+  task: Task,
+  newStatus: Task['status'],
+  newCompletedAmount: number
+): Promise<void> => {
+  const batch = writeBatch(db);
+
+  batch.update(doc(db, 'users', uid, 'tasks', task.id), {
+    status: newStatus,
+    completedAmount: newCompletedAmount,
+    updatedAt: serverTimestamp(),
+  });
+
+  const delta = newCompletedAmount - task.completedAmount;
+  if (delta !== 0 && task.centerId) {
+    const centerRef = doc(db, 'users', uid, 'centers', task.centerId);
+    const centerSnap = await getDoc(centerRef);
+    if (centerSnap.exists()) {
+      const current = (centerSnap.data().currentBalance ?? 0) as number;
+      batch.update(centerRef, {
+        currentBalance: current + delta,
+        updatedAt: serverTimestamp(),
+      });
+    }
+  }
+
+  await batch.commit();
+};
+
 // ---------- transfers & withdrawals ----------
 export const addTransfer = async (
   uid: string,
@@ -335,10 +366,8 @@ export const regenerateTasks = async (
     weight: number;
   }[]
 ): Promise<void> => {
-  // delete all existing pending tasks first
-  const existing = await getDocs(
-    query(sub(uid, 'tasks'), where('status', '==', 'pending'))
-  );
+  // delete ALL existing tasks before regenerating
+  const existing = await getDocs(sub(uid, 'tasks'));
   const batch = writeBatch(db);
   existing.docs.forEach((d) => batch.delete(d.ref));
   for (const t of tasks) {
