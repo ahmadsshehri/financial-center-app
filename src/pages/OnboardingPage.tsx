@@ -37,18 +37,20 @@ interface DraftCenter {
 }
 
 interface Obligation {
-  key: string;
+  id: number;
   label: string;
-  example: string;
   amount: number;
 }
 
+let _obId = 5;
+const newObId = () => ++_obId;
+
 const INITIAL_OBLIGATIONS: Obligation[] = [
-  { key: 'housing',   label: 'السكن',              example: 'إيجار أو قسط منزل — مثال: 2000 ريال', amount: 0 },
-  { key: 'transport', label: 'المواصلات',           example: 'قسط سيارة أو وقود شهري — مثال: 800 ريال', amount: 0 },
-  { key: 'debts',     label: 'الديون والقروض',      example: 'قرض بنكي أو دين شخصي — مثال: 500 ريال', amount: 0 },
-  { key: 'bills',     label: 'الفواتير الثابتة',    example: 'كهرباء، إنترنت، اتصالات — مثال: 300 ريال', amount: 0 },
-  { key: 'other',     label: 'التزامات أخرى',       example: 'مدارس، اشتراكات، أقساط أخرى — مثال: 400 ريال', amount: 0 },
+  { id: 1, label: 'الإيجار',           amount: 0 },
+  { id: 2, label: 'المواصلات',          amount: 0 },
+  { id: 3, label: 'الديون والأقساط',   amount: 0 },
+  { id: 4, label: 'الفواتير الثابتة',  amount: 0 },
+  { id: 5, label: 'التزامات أخرى',     amount: 0 },
 ];
 
 function calcHealthScore(obligationRatio: number) {
@@ -102,8 +104,12 @@ export const OnboardingPage = () => {
   const removeIncome = (i: number) =>
     setIncomes((prev) => prev.filter((_, idx) => idx !== i));
 
-  const updateObligationAmount = (key: string, amount: number) =>
-    setObligations((prev) => prev.map((o) => (o.key === key ? { ...o, amount } : o)));
+  const updateObligation = (id: number, patch: Partial<Obligation>) =>
+    setObligations((prev) => prev.map((o) => (o.id === id ? { ...o, ...patch } : o)));
+  const addObligation = () =>
+    setObligations((prev) => [...prev, { id: newObId(), label: '', amount: 0 }]);
+  const removeObligation = (id: number) =>
+    setObligations((prev) => prev.filter((o) => o.id !== id));
 
   const applyHealthAllocation = () => {
     const suggested = suggestedAllocation(obligationRatio);
@@ -284,25 +290,36 @@ export const OnboardingPage = () => {
               </p>
             </div>
 
-            {obligations.map((o) => (
-              <Card key={o.key} className="space-y-2">
+            {obligations.map((o, i) => (
+              <Card key={o.id} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-slate-800">{o.label}</span>
-                  {o.amount > 0 && (
-                    <span className="text-xs font-medium text-blue-700">{formatCurrency(o.amount)}</span>
+                  <span className="text-xs text-slate-400">التزام {i + 1}</span>
+                  {obligations.length > 1 && (
+                    <button onClick={() => removeObligation(o.id)} className="text-red-500 hover:text-red-600">
+                      <Trash2 size={15} />
+                    </button>
                   )}
                 </div>
-                <p className="text-xs text-slate-400">{o.example}</p>
+                <input
+                  type="text"
+                  value={o.label}
+                  onChange={(e) => updateObligation(o.id, { label: e.target.value })}
+                  placeholder="اسم الالتزام — مثال: إيجار، راتب سائق، مدرسة"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-right text-sm"
+                />
                 <input
                   type="number"
                   value={o.amount || ''}
-                  onChange={(e) => updateObligationAmount(o.key, Number(e.target.value) || 0)}
-                  placeholder="0"
+                  onChange={(e) => updateObligation(o.id, { amount: Number(e.target.value) || 0 })}
+                  placeholder="المبلغ الشهري التقريبي"
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-left text-sm"
                   dir="ltr"
                 />
               </Card>
             ))}
+            <Button variant="secondary" fullWidth onClick={addObligation}>
+              <Plus size={16} /> إضافة التزام
+            </Button>
 
             {/* Health score indicator */}
             {income > 0 && (
